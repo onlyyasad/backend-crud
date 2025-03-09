@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
+import { TAddress, TFullName, TOrder, TUser } from './user.interface'
 
-const fullNameSchema = new mongoose.Schema({
+const fullNameSchema = new mongoose.Schema<TFullName>({
   firstName: {
     type: String,
     required: [true, 'First name is required.'],
@@ -11,7 +12,7 @@ const fullNameSchema = new mongoose.Schema({
   },
 })
 
-const addressSchema = new mongoose.Schema({
+const addressSchema = new mongoose.Schema<TAddress>({
   street: {
     type: String,
     required: [true, 'Street is required.'],
@@ -26,7 +27,7 @@ const addressSchema = new mongoose.Schema({
   },
 })
 
-const ordersSchema = new mongoose.Schema({
+const ordersSchema = new mongoose.Schema<TOrder>({
   productName: {
     type: String,
     required: [true, 'Product name is required'],
@@ -41,7 +42,7 @@ const ordersSchema = new mongoose.Schema({
   },
 })
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema<TUser>({
   userId: {
     type: Number,
     required: [true, 'User id is required.'],
@@ -82,4 +83,4 @@ const userSchema = new mongoose.Schema({
   orders: ordersSchema,
 })
 
-export const User = mongoose.model('User', userSchema)
+export const User = mongoose.model<TUser>('User', userSchema)

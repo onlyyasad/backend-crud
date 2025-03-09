@@ -16,8 +16,8 @@ const createUserIntoDB = async (user: TUser) => {
   return result
 }
 
-const updateUserByIdInDB = async (userId: number, user: TUser) => {
-  const result = await User.updateOne({ userId }, user)
+const updateUserByIdInDB = async (userId: number, payload: TUser) => {
+  const result = await User.updateOne({ userId }, payload)
   return result
 }
 
@@ -32,7 +32,7 @@ const addProductToUserOrdersInDB = async (userId: number, product: TOrder) => {
 }
 
 const getUserOrdersFromDB = async (userId: number) => {
-  const result = await User.findOne({ userId }) // TODO:
+  const result = await User.findOne({ userId }) // TODO
   return result
 }
 

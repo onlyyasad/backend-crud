@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { userServices } from './user.service'
+import userValidationSchema from './user.validation'
 
 const getUsers = async (req: Request, res: Response) => {
   try {
@@ -7,7 +8,7 @@ const getUsers = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Users are retrieved successfully!',
+      message: 'Users fetched successfully!',
       data: users,
     })
   } catch (error: any) {
@@ -25,7 +26,7 @@ const getUserById = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'User is retrieved successfully!',
+      message: 'User fetched successfully!',
       data: userResponse,
     })
   } catch (error: any) {
@@ -39,8 +40,9 @@ const getUserById = async (req: Request, res: Response) => {
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = req.body
+    const parsedUser = userValidationSchema.parse(user)
 
-    const userResponse = await userServices.createUserIntoDB(user)
+    const userResponse = await userServices.createUserIntoDB(parsedUser)
 
     res.status(200).json({
       success: true,
@@ -82,12 +84,12 @@ const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
 
-    const userResponse = await userServices.deleteUserFromDB(Number(userId))
+    await userServices.deleteUserFromDB(Number(userId))
 
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',
-      data: userResponse,
+      data: null,
     })
   } catch (error: any) {
     res.status(500).json({
@@ -102,15 +104,12 @@ const addProductToUserOrders = async (req: Request, res: Response) => {
     const { userId } = req.params
     const product = req.body
 
-    const response = await userServices.addProductToUserOrdersInDB(
-      Number(userId),
-      product,
-    )
+    await userServices.addProductToUserOrdersInDB(Number(userId), product)
 
     res.status(200).json({
       success: true,
-      message: 'Order added successfully!',
-      data: response,
+      message: 'Order created successfully!',
+      data: null,
     })
   } catch (error: any) {
     res.status(500).json({
@@ -128,7 +127,7 @@ const getUserOrders = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Orders are retrieved successfully!',
+      message: 'Order fetched successfully!',
       data: orders,
     })
   } catch (error: any) {
@@ -149,7 +148,7 @@ const getTotalPriceOfUserOrders = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Orders total is retrieved successfully!',
+      message: 'Total price calculated successfully!',
       data: response,
     })
   } catch (error: any) {

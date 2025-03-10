@@ -1,5 +1,11 @@
 import mongoose from 'mongoose'
-import { TAddress, TFullName, TOrder, TUser } from './user.interface'
+import {
+  IUserModel,
+  TAddress,
+  TFullName,
+  TOrder,
+  TUser,
+} from './user.interface'
 
 const fullNameSchema = new mongoose.Schema<TFullName>({
   firstName: {
@@ -42,7 +48,7 @@ const ordersSchema = new mongoose.Schema<TOrder>({
   },
 })
 
-const userSchema = new mongoose.Schema<TUser>({
+const userSchema = new mongoose.Schema<TUser, IUserModel>({
   userId: {
     type: Number,
     required: [true, 'User id is required.'],
@@ -80,12 +86,22 @@ const userSchema = new mongoose.Schema<TUser>({
     type: addressSchema,
     required: [true, 'Address is required.'],
   },
-  orders: ordersSchema,
+  orders: [ordersSchema],
 })
+
+userSchema.statics.isUserExists = async function (userId: number) {
+  const user = await User.findOne({ userId })
+  return user
+}
+
+userSchema.statics.isUserNameExists = async function (userName: string) {
+  const user = await User.findOne({ userName })
+  return user
+}
 
 userSchema.pre('find', function (next) {
   this.find({ isActive: { $ne: false } })
   next()
 })
 
-export const User = mongoose.model<TUser>('User', userSchema)
+export const User = mongoose.model<TUser, IUserModel>('User', userSchema)

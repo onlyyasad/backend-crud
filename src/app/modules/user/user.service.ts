@@ -15,6 +15,14 @@ const getUserByIdFromDB = async (userId: number) => {
 }
 
 const createUserIntoDB = async (user: TUser) => {
+  if (await User.isUserExists(user.userId)) {
+    throw new Error('User already exists!')
+  }
+
+  if (await User.isUserNameExists(user.username)) {
+    throw new Error('Username already exists!')
+  }
+
   const result = await User.create(user)
   return result
 }

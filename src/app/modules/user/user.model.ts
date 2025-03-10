@@ -94,8 +94,8 @@ userSchema.statics.isUserExists = async function (userId: number) {
   return user
 }
 
-userSchema.statics.isUserNameExists = async function (userName: string) {
-  const user = await User.findOne({ userName })
+userSchema.statics.isUserNameExists = async function (username: string) {
+  const user = await User.findOne({ username })
   return user
 }
 

@@ -83,4 +83,9 @@ const userSchema = new mongoose.Schema<TUser>({
   orders: ordersSchema,
 })
 
+userSchema.pre('find', function (next) {
+  this.find({ isActive: { $ne: false } })
+  next()
+})
+
 export const User = mongoose.model<TUser>('User', userSchema)

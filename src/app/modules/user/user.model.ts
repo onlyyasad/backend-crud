@@ -6,6 +6,8 @@ import {
   TOrder,
   TUser,
 } from './user.interface'
+import bcrypt from 'bcrypt'
+import config from '../../config'
 
 const fullNameSchema = new mongoose.Schema<TFullName>({
   firstName: {
@@ -101,6 +103,14 @@ userSchema.statics.isUserNameExists = async function (username: string) {
 
 userSchema.pre('find', function (next) {
   this.find({ isActive: { $ne: false } })
+  next()
+})
+
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds),
+  )
   next()
 })
 

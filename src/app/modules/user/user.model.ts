@@ -88,7 +88,10 @@ const userSchema = new mongoose.Schema<TUser, IUserModel>({
     type: addressSchema,
     required: [true, 'Address is required.'],
   },
-  orders: [ordersSchema],
+  orders: {
+    type: [ordersSchema],
+    default: undefined,
+  },
 })
 
 userSchema.statics.isUserExists = async function (userId: number) {

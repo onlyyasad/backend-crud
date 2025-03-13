@@ -10,8 +10,12 @@ const getUsersFromDB = async () => {
 }
 
 const getUserByIdFromDB = async (userId: number) => {
-  const result = await User.findOne({ userId })
-  return result
+  if (await User.isUserExists(userId)) {
+    const result = await User.findOne({ userId })
+    return result
+  } else {
+    throw new Error("User doesn't exists!")
+  }
 }
 
 const createUserIntoDB = async (user: TUser) => {
@@ -28,13 +32,21 @@ const createUserIntoDB = async (user: TUser) => {
 }
 
 const updateUserByIdInDB = async (userId: number, payload: TUser) => {
-  const result = await User.updateOne({ userId }, payload)
-  return result
+  if (await User.isUserExists(userId)) {
+    const updatedUser = await User.findOneAndUpdate({ userId }, payload)
+    return updatedUser
+  } else {
+    throw new Error("User doesn't exists!")
+  }
 }
 
 const deleteUserFromDB = async (userId: number) => {
-  const result = await User.updateOne({ userId }, { isActive: false })
-  return result
+  if (await User.isUserExists(userId)) {
+    const result = await User.updateOne({ userId }, { isActive: false })
+    return result
+  } else {
+    throw new Error("User doesn't exists!")
+  }
 }
 
 const addProductToUserOrdersInDB = async (userId: number, product: TOrder) => {

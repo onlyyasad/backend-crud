@@ -132,6 +132,16 @@ userSchema.pre('find', function (next) {
   next()
 })
 
+userSchema.pre('findOne', function (next) {
+  this.find({ isActive: { $ne: false } })
+  next()
+})
+
+userSchema.pre('updateOne', function (next) {
+  this.find({ isActive: { $ne: false } })
+  next()
+})
+
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(
     this.password,

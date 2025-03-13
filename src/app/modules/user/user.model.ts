@@ -50,49 +50,65 @@ const ordersSchema = new mongoose.Schema<TOrder>({
   },
 })
 
-const userSchema = new mongoose.Schema<TUser, IUserModel>({
-  userId: {
-    type: Number,
-    required: [true, 'User id is required.'],
-    unique: true,
+const userSchema = new mongoose.Schema<TUser, IUserModel>(
+  {
+    userId: {
+      type: Number,
+      required: [true, 'User id is required.'],
+      unique: true,
+    },
+    username: {
+      type: String,
+      required: [true, 'username is Required'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is Required'],
+    },
+    fullName: {
+      type: fullNameSchema,
+      required: [true, 'Full name is required'],
+    },
+    age: {
+      type: Number,
+      required: [true, 'Age is required.'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    hobbies: {
+      type: [String],
+      required: [true, 'Hobbies are required.'],
+    },
+    address: {
+      type: addressSchema,
+      required: [true, 'Address is required.'],
+    },
+    orders: {
+      type: [ordersSchema],
+      default: undefined,
+    },
   },
-  username: {
-    type: String,
-    required: [true, 'username is Required'],
+  {
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.__v
+        return ret
+      },
+    },
+    toObject: {
+      transform: function (doc, ret) {
+        delete ret.__v
+        return ret
+      },
+    },
   },
-  password: {
-    type: String,
-    required: [true, 'Password is Required'],
-  },
-  fullName: {
-    type: fullNameSchema,
-    required: [true, 'Full name is required'],
-  },
-  age: {
-    type: Number,
-    required: [true, 'Age is required.'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-  hobbies: {
-    type: [String],
-    required: [true, 'Hobbies are required.'],
-  },
-  address: {
-    type: addressSchema,
-    required: [true, 'Address is required.'],
-  },
-  orders: {
-    type: [ordersSchema],
-    default: undefined,
-  },
-})
+)
 
 userSchema.statics.isUserExists = async function (userId: number) {
   const user = await User.findOne({ userId })

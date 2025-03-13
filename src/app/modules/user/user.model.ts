@@ -8,6 +8,7 @@ import {
 } from './user.interface'
 import bcrypt from 'bcrypt'
 import config from '../../config'
+import validator from 'validator'
 
 const fullNameSchema = new mongoose.Schema<TFullName>({
   firstName: {
@@ -76,6 +77,12 @@ const userSchema = new mongoose.Schema<TUser, IUserModel>(
     email: {
       type: String,
       required: [true, 'Email is required'],
+      validate: {
+        validator: (value: string) => {
+          return validator.isEmail(value)
+        },
+        message: '{VALUE} is not a valid email.',
+      },
     },
     isActive: {
       type: Boolean,

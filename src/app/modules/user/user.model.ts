@@ -127,6 +127,11 @@ userSchema.statics.isUserNameExists = async function (username: string) {
   return user
 }
 
+userSchema.statics.isOrdersExists = async function (userId: number) {
+  const user = await User.findOne({ userId })
+  return !!user?.orders
+}
+
 userSchema.pre('find', function (next) {
   this.find({ isActive: { $ne: false } })
   next()
@@ -139,6 +144,11 @@ userSchema.pre('findOne', function (next) {
 
 userSchema.pre('updateOne', function (next) {
   this.find({ isActive: { $ne: false } })
+  next()
+})
+
+userSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isActive: { $ne: false } } })
   next()
 })
 

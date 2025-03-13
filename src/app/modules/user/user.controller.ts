@@ -106,12 +106,15 @@ const addProductToUserOrders = async (req: Request, res: Response) => {
     const { userId } = req.params
     const product = req.body
 
-    await userServices.addProductToUserOrdersInDB(Number(userId), product)
+    const result = await userServices.addProductToUserOrdersInDB(
+      Number(userId),
+      product,
+    )
 
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
-      data: null,
+      data: result,
     })
   } catch (error: any) {
     res.status(500).json({

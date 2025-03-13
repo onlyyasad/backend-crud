@@ -33,4 +33,5 @@ export type TUser = {
 export interface IUserModel extends Model<TUser> {
   isUserExists(userId: number): Promise<TUser | null>
   isUserNameExists(userName: string): Promise<TUser | null>
+  isOrdersExists(userId: number): Promise<boolean>
 }

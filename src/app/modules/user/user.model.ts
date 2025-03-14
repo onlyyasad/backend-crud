@@ -104,12 +104,14 @@ const userSchema = new mongoose.Schema<TUser, IUserModel>(
   {
     toJSON: {
       transform: function (doc, ret) {
+        // removing mongodb default _v property from response
         delete ret.__v
         return ret
       },
     },
     toObject: {
       transform: function (doc, ret) {
+        // removing mongodb default _v property from response
         delete ret.__v
         return ret
       },
@@ -117,40 +119,72 @@ const userSchema = new mongoose.Schema<TUser, IUserModel>(
   },
 )
 
+/**
+ * Checking if provided user already exists by its userId in db for the uniqueness
+ */
+
 userSchema.statics.isUserExists = async function (userId: number) {
   const user = await User.findOne({ userId })
   return user
 }
+
+/**
+ * Checking if provided email already exists in db for the uniqueness
+ */
 
 userSchema.statics.isUserNameExists = async function (username: string) {
   const user = await User.findOne({ username })
   return user
 }
 
+/**
+ * Checking if orders property exists in a user data
+ */
+
 userSchema.statics.isOrdersExists = async function (userId: number) {
   const user = await User.findOne({ userId })
   return !!user?.orders
 }
+
+/**
+ * Removing deleted user data
+ */
 
 userSchema.pre('find', function (next) {
   this.find({ isActive: { $ne: false } })
   next()
 })
 
+/**
+ * Removing deleted user data
+ */
+
 userSchema.pre('findOne', function (next) {
   this.find({ isActive: { $ne: false } })
   next()
 })
+
+/**
+ * Removing deleted user data so that deleted user data can't be update
+ */
 
 userSchema.pre('updateOne', function (next) {
   this.find({ isActive: { $ne: false } })
   next()
 })
 
+/**
+ * Removing deleted user data before calculation
+ */
+
 userSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isActive: { $ne: false } } })
   next()
 })
+
+/**
+ * Hashing password before saving to db
+ */
 
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(

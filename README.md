@@ -14,6 +14,10 @@ To run this project, you will need to add the following environment variables to
 
 ## Run Locally
 
+#### Prerequisite
+
+You need minimum `node v22.13.1` and package manager `npm` installed in your machine
+
 Clone the project
 
 ```bash
@@ -106,6 +110,26 @@ Start the server
 
 ```http
   DELETE /api/users/:userId
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`  | `number` | **Required**. userId of user data |
+
+#### 6. Get user orders
+
+```http
+  GET /api/users/:userId/orders
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`  | `number` | **Required**. userId of user data |
+
+#### 6. Get user orders total
+
+```http
+  GET /api/users/:userId/orders/total-price
 ```
 
 | Parameter | Type     | Description                       |
